@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en"
+		xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8"></meta>
+    <title >用户注册</title>
+    <meta name="description" content=""></meta>
+    <meta name="viewport" content="width=device-width"></meta>
+    
+	<link rel="icon" type="image/x-icon" th:href="@{~/joba.ico}"></link>
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}"></link>
+   
+    <!-- Font-Awesome -->
+    <link rel="stylesheet" th:href="@{~/css/font-awesome/css/font-awesome.min.css}"></link>
+
+    <!-- Styles -->
+    <link rel="stylesheet" th:href="@{~/css/style.css}" id="theme-styles"></link>
+
+    <!--[if lt IE 9]>      
+        <script src="js/vendor/google/html5-3.6-respond-1.1.0.min.js"></script>
+    <![endif]-->
+    
+</head>
+<body>
+    <header>
+       <div th:replace="fragments/header :: header"></div>
+    </header>
+   
+	<div class="container" >
+	<div class="col-md-8 blog-main" style="white-spacing:nowrap">
+		<h2 class="text-default" th:text="${user.name}+'的博文'">用户所有博文</h2>
+		<hr></hr>
+	
+		<div class="row">
+		    <div class="col-md-12 col-sm-12" th:each="article,articleState : ${articleModel.articles}" style="overflow:hidden; text-overflow:ellipsis">
+		     <h3><a	th:href="@{'/single/'+${article.id}}" ><strong th:text="${(articleModel.pageId-1)*8+articleState.count}+'. '+${article.title}"></strong></a></h3>
+		     <div th:if="${article.content.length()} ge 100" class="body" th:text="${article.content.substring(0,99)}+'......'" style="overflow:hidden; text-overflow:ellipsis"></div>
+		     <div th:if="${article.content.length()} lt 100" class="body" th:text="${article.content}" style="overflow:hidden; text-overflow:ellipsis"></div>
+		     <hr></hr>
+		     </div>
+	     </div>
+	
+			<div id="pageIndex">
+	       <ul class="pagination" >
+	       <li ><a th:href="@{'/user/'+${articleModel.pageId-1}}">&laquo;</a></li>
+	       <li th:class="${i}==${articleModel.pageId}? 'active' :''" th:each="i : ${#numbers.sequence(1,articleModel.pageCount)}"> <a th:href="@{'/user/'+${i}}" th:text="${i}" ></a></li>
+	       <li><a th:href="@{'/user/'+${articleModel.pageId+1}}">&raquo;</a></li>
+	       </ul>  
+	       </div>
+       </div>
+     <aside class="col-md-4 blog-aside" >
+   				<div class="aside-widget">
+                        <header>
+                            <h3>用户信息</h3>
+                        </header>
+                        <div class="body" style="height:150px">
+                        	<div class="col-md-5">
+                            <img th:src="@{'~/img//avatar/'+${session.avatar}+'.jpg'}" style="height:100px" class="img-rounded"></img>
+                            </div>
+                            <div class="col-md-7" >                         
+                            <span th:text="'用户名：'+${user.name}"></span>
+                            <br></br>
+                            <sapn th:text="'博文数量：'+${articleModel.totalArticleCount}"></sapn>
+                            <br></br>
+                            <span>个性签名：？？？？</span>
+                            </div>
+                        </div>
+    			</div>
+    </aside>
+       
+   	</div>
+   	
+   	
+   	
+    <footer>
+        <div th:replace="fragments/footer :: footer"></div>
+    </footer>
+    
+    <script th:src="@{~/js/jquery.min.js}"></script>
+    <script th:src="@{~/js/bootstrap.min.js}"></script>
+    <script th:src="@{~/js/modernizr.js}"></script>
+	<script type="text/javascript">
+	$(function(){
+		$("#registerButton").click(function(){
+			$.ajax({
+				url:"/user/register",
+				type:"POST",
+				dataType:"json",
+				data :  new FormData($("#registerForm")[0]),
+				contentType : false,// 告诉jQuery不要去设置Content-Type请求头
+		        processData: false,// 告诉jQuery不要去处理发送的数据
+				success:function(data){
+					if(data.success){
+						alert(data.msg);
+						window.location.href="/index";//注册成功则返回主页面
+					}else{
+						alert("注册失败："+data.msg);
+					}
+				},
+				error:function(jqXHR){
+					alert("ajax请求失败:"+jqXHR.status);
+				}
+			});
+		})
+	})
+	</script>
+	<script th:inline="javascript">
+	$(function(){
+		$("#writeBlog").click(function(){
+			if(/*[[${session.user} != null]]*/){
+				window.location.href="/edit";
+			}else{
+				alert("请先登录！");
+			}
+		})
+	});
+	</script>
+</body>
+</html>

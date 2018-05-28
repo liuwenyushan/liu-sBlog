@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" 
+xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8"></meta>
+    <title>About Me</title>
+    <meta name="description" content=""></meta>
+    <meta name="viewport" content="width=device-width"></meta>
+	<link rel="icon" type="image/x-icon" th:href="@{~/joba.ico}"></link>
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}"></link>
+   
+    <!-- Font-Awesome -->
+    <link rel="stylesheet" th:href="@{~/css/font-awesome/css/font-awesome.min.css}"></link>
+
+    <!-- Styles -->
+    <link rel="stylesheet" th:href="@{~/css/style.css}" id="theme-styles"></link>
+
+    <!--[if lt IE 9]>      
+        <script src="js/vendor/google/html5-3.6-respond-1.1.0.min.js"></script>
+    <![endif]-->
+    
+</head>
+<body>
+    <header>
+        <div th:replace="fragments/header :: header"></div>
+    </header>
+
+    <div class="widewrapper main">
+        <div class="container about">
+            <h1>Hello, this is <span class="about-bold">  liu's Blog</span></h1>
+            <p>Something will be here later</p>
+            <p></p>
+
+            <div class="about-button">
+                <a class="btn btn-xlarge btn-clean-one" href="/contact">Contact Me</a>
+            </div>
+            <hr></hr>
+        </div>
+
+    </div>
+	<div th:replace="index :: login"></div>
+    <footer>
+       <div th:replace="fragments/footer :: footer"></div>
+    </footer>
+    
+    <script th:src="@{~/js/jquery.min.js}"></script>
+    <script th:src="@{~/js/bootstrap.min.js}"></script>
+    <script th:src="@{~/js/modernizr.js}"></script>
+	<script th:src="@{~/js/login.js}"></script>
+	<script th:inline="javascript">
+	$(function(){
+		$("#writeBlog").click(function(){
+			if(/*[[${session.user} != null]]*/){
+				window.location.href="/edit";
+			}else{
+				alert("请先登录！");
+			}
+		})
+	});
+	</script>
+	
+</body>
+</html>

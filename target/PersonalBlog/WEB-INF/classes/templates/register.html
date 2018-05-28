@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en"
+		xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8"></meta>
+    <title >用户注册</title>
+    <meta name="description" content=""></meta>
+    <meta name="viewport" content="width=device-width"></meta>
+
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}"></link>
+   
+    <!-- Font-Awesome -->
+    <link rel="stylesheet" th:href="@{~/css/font-awesome/css/font-awesome.min.css}"></link>
+
+    <!-- Styles -->
+    <link rel="stylesheet" th:href="@{~/css/style.css}" id="theme-styles"></link>
+    
+    
+	<link rel="stylesheet" th:href="@{~/css/image-picker.css}"></link>
+
+    <!--[if lt IE 9]>      
+        <script src="js/vendor/google/html5-3.6-respond-1.1.0.min.js"></script>
+    <![endif]-->
+    
+</head>
+<body>
+    <header>
+       <div th:replace="fragments/header :: header"></div>
+    </header>
+   
+	<div class="container">
+	<h2 class="text-center text-default">用户注册</h2>
+	 <form class="form-horizontal" role="form" action="/user/register" id="registerForm">
+	 <!-- <input type="hidden" name="id"  id="id" value="0"></input> -->
+	<div class="form-group">
+		<label  class="col-sm-2 control-label">用户名</label>
+		<div class="col-sm-5">
+			<input type="text" class="form-control" id="name" 
+				   placeholder="请输入用户名" name="name"></input>
+		</div>
+	</div>
+	<div class="form-group">
+		<label  class="col-sm-2 control-label">密码</label>
+		<div class="col-sm-5">
+			<input type="password" class="form-control" id="password" 
+				   placeholder="请输入密码" name="password"></input>
+		</div>
+	</div>
+	<div class=" form-group">
+	<label  class="col-sm-2 control-label">选择头像</label>
+	<div class="col-sm-5">
+	<select class="image-picker masonry show-html" id="avatar" name="avatar">
+		  <option  th:attr="data-img-src=@{~/img/avatar/1.jpg}" value="1">1</option>
+		  <option th:attr="data-img-src=@{~/img/avatar/2.jpg}" value="2">2</option>
+		  <option th:attr="data-img-src=@{~/img/avatar/3.jpg}" value="3">3</option>
+		  <option th:attr="data-img-src=@{~/img/avatar/4.jpg}" value="4">4</option>
+		  <option th:attr="data-img-src=@{~/img/avatar/5.jpg}" value="5">5</option>
+		  <option th:attr="data-img-src=@{~/img/avatar/6.jpg}" value="6">6</option>
+		  <option th:attr="data-img-src=@{~/img/avatar/7.jpg}" value="7">7</option>
+		  <option th:attr="data-img-src=@{~/img/avatar/8.jpg}" value="8">8</option>
+		  <option th:attr="data-img-src=@{~/img/avatar/9.jpg}" value="9">9</option>
+	</select>
+	</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-5">
+			<button type="button" class="btn btn-default" id="registerButton">注册</button>
+		</div>
+	</div>
+</form>
+   	</div>
+    <footer>
+        <div th:replace="fragments/footer :: footer"></div>
+    </footer>
+    
+    <script th:src="@{~/js/jquery.min.js}"></script>
+    <script th:src="@{~/js/bootstrap.min.js}"></script>
+    <script th:src="@{~/js/modernizr.js}"></script>
+    <script th:src="@{~/js/image-picker.min.js}"></script>
+	<script type="text/javascript">
+	$(function(){
+		$("#registerButton").click(function(){
+			$.ajax({
+				url:"/user/register",
+				type:"POST",
+				dataType:"json",
+				data :  new FormData($("#registerForm")[0]),
+				contentType : false,// 告诉jQuery不要去设置Content-Type请求头
+		        processData: false,// 告诉jQuery不要去处理发送的数据
+				success:function(data){
+					if(data.success){
+						alert(data.msg);
+						window.location.href="/index";//注册成功则返回主页面
+					}else{
+						alert("注册失败："+data.msg);
+					}
+				},
+				error:function(jqXHR){
+					alert("ajax请求失败:"+jqXHR.status);
+				}
+			});
+		})
+	})
+	</script>
+	<script type="text/javascript">
+	$(function(){
+		$("select").imagepicker();
+	})
+
+</script>
+</body>
+</html>

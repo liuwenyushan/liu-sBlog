@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8"></meta>
+<title>用户管理</title>
+</head>
+<body>
+<div th:fragment="aside">
+<aside class="col-md-4 blog-aside">
+                    
+                    <div class="aside-widget">
+                        <header>
+                            <h3><img th:src="@{~/img/aside1.png}"></img>&nbsp;最新文章</h3>
+                        </header>
+                        <div class="body">
+                            <ul class="clean-list">
+                                <li th:each="article : ${articleModel.newArticles}"><a  th:href="@{'/single/'+${article.id}}" th:text="${article.title}">Clean - Responsive HTML5 Template</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                
+                    <div class="aside-widget">
+                        <header>
+                            <h3>热点文章</h3>
+                        </header>
+                        <div class="body">
+                            <ul class="clean-list">
+                                <li th:each="article : ${articleModel.hotArticles}"><a  th:href="@{'/single/'+${article.id}}" th:text="${article.title}">Clean - Responsive HTML5 Template</a></li>                          
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="aside-widget">
+                        <header>
+                            <h3>文章分类</h3>
+                        </header>
+                        <div class="body clearfix">
+                            <ul class="tags">
+                                <li><a th:href="@{/category/java/1}">Java</a></li>
+                                <li><a th:href="@{/category/spring/1}">Spring</a></li>
+                                <li><a th:href="@{/category/大数据/1}">大数据</a></li>
+                                <li><a th:href="@{/category/linux/1}">Linux</a></li>
+                                <li><a th:href="@{/category/数据库/1}">数据库</a></li>
+                                <li><a th:href="@{/category/算法/1}">算法</a></li>
+                                <li><a th:href="@{/category/其它/1}">其它</a></li>                                
+                            </ul>
+                        </div>
+                    </div>
+                </aside>
+ </div>       
+</body>
+
+</html>

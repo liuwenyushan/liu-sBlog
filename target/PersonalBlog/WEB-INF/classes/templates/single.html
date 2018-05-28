@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"
+	xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8"></meta>
+    <title th:text="${articleModel.title}">Single Post</title>
+    <meta name="description" content=""></meta>
+    <meta name="viewport" content="width=device-width"></meta>
+
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}"></link>
+   
+    <!-- Font-Awesome -->
+    <link rel="stylesheet" th:href="@{~/css/font-awesome/css/font-awesome.min.css}"></link>
+    <link rel="icon" type="image/x-icon" th:href="@{~/joba.ico}"></link>
+    <!-- Styles -->
+    <link rel="stylesheet" th:href="@{~/css/style.css}" id="theme-styles"></link>
+	
+	<link rel="stylesheet" th:href="@{~/css/editormd.min.css}"></link>
+    <!--[if lt IE 9]>      
+        <script src="js/vendor/google/html5-3.6-respond-1.1.0.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <header>
+        <div th:replace="fragments/header :: header"></div>
+    </header>
+
+    <div class="widewrapper main">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 blog-main">
+                    <article class="blog-post">
+                        <header>
+                           
+                            <div class="lead-image">
+                                <img src="@{~/img/single-post.jpg}" alt="" class="img-responsive"></img>
+                                
+                            </div>
+                        </header>
+                        <div class="body">
+                            <h2 ><strong th:text="${articleModel.title}"></strong></h2>
+                            <div class="meta">
+                                <i class="fa fa-user"></i> <span th:text="${articleModel.article.author}">John Doe</span> <i class="fa fa-calendar"></i><span th:text="${articleModel.article.createDate}">23 Agustus 2015</span><i class="fa fa-comments"></i><span class="data"><a href="#comments" th:text="${articleModel.commentCount}+' 条评论'"></a></span>
+                            </div>
+                            <div id="test-editormd">
+                            <textarea style="display:none;"  th:utext="${articleModel.article.content}"></textarea>
+                           <!--  <span th:utext="${articleModel.article.content}"></span> -->
+                            </div>
+                            
+                        </div>
+                    </article>
+
+                    <aside class="social-icons clearfix" th:if="${session.user} != null">
+                        <button class="btn btn-default"  id="editArticle">编辑</button>
+                        <button class="btn btn-default"  id="deleteArticle">删除</button>
+                    </aside>
+
+                     <aside class="comments" id="comments">
+                        <hr></hr>
+                        <h2><i class="fa fa-comments" ></i> <span th:text="${articleModel.commentCount}+' 条评论'"></span></h2>
+
+                        <article class="comment" th:each="comment : ${articleModel.comments}">
+                            <header class="clearfix">
+                                <img th:src="@{'~/img//avatar/'+${comment.avatarId}+'.jpg'}"  class="avatar"></img>
+                                <div class="meta">
+                                    <h3><a href="" th:text="${comment.name}">John Doe</a></h3>
+                                    <span class="date" th:text="${comment.createdate}">
+                                    </span>
+                                    <span class="separator">
+                                        -
+                                    </span>
+                                    <a th:href="@{'/deleteComment/'+${articleModel.article.id}+'/'+${comment.id}}" th:if="${session.user} !=null">删除</a>                
+                                </div>
+                            </header>
+                             <div class="body" th:text="${comment.content}">
+                         	
+                            </div>
+                        </article>              
+                    </aside> 
+
+                    <aside class="create-comment" id="create-comment">
+                        <hr> </hr>   
+                        <h2><i class="fa fa-pencil"></i> 添加评论</h2>
+                        <form th:action="@{'/addComment/'+${articleModel.article.id}}" method="get" accept-charset="utf-8">
+                        	<textarea rows="5" name="message" id="message" placeholder="你的评论" class="form-control input-lg"></textarea>
+                            <div class="buttons clearfix">
+                                <button type="submit" class="btn btn-xlarge btn-clean-one">提交评论</button>
+                            </div>
+                        </form>
+                    </aside>
+                </div>
+                <div th:replace="fragments/aside :: aside">
+                </div>
+            </div>
+        </div>
+    </div>
+	<div th:replace="index :: login"></div>
+    <footer>
+        <div th:replace="fragments/footer :: footer"></div>
+    </footer>
+
+    <script th:src="@{~/js/jquery.min.js}"></script>
+    <script th:src="@{~/js/bootstrap.min.js}"></script>
+    <script th:src="@{~/js/modernizr.js}"></script>
+    <!-- editor.md js文件引入 -->
+    <script th:src="@{~/js/editormd.min.js}"></script>
+    <script th:src="@{~/editorlib/lib/marked.min.js}"></script>
+	<script th:src="@{~/editorlib/lib/prettify.min.js}"></script>
+	<script th:src="@{~/editlorib/lib/raphael.min.js}"></script>
+	<script th:src="@{~/editorlib/lib/underscore.min.js}"></script>
+	<script th:src="@{~/editorlib/lib/sequence-diagram.min.js}"></script>
+	<script th:src="@{~/editorlib/lib/flowchart.min.js}"></script>
+	<script th:src="@{~/editorlib/lib/jquery.flowchart.min.js}"></script>
+	<script th:src="@{~/js/login.js}"></script>
+	
+	<script type="text/javascript">
+	//editormd解析markdown文本为html样式
+	$(function() {
+		editormd.markdownToHTML("test-editormd", {
+		    htmlDecode      : "style,script,iframe",  
+		    emoji           : true,
+		    taskList        : true,
+		    tex             : true,  // 默认不解析
+		    flowChart       : true,  // 默认不解析
+		    sequenceDiagram : true  // 默认不解析
+		});
+    });
+	</script>
+	<script type="text/javascript" th:inline="javascript">
+	 $(function(){
+		$("#deleteArticle").click(function(){
+			  var check=confirm("是否确认删除？");
+			  if(check== true){
+				  window.location.href=/*[[@{'/article/delete/'+${articleModel.article.id}}]]*/
+			  }
+		})
+	});
+	 $(function(){
+		 $("#editArticle").click(function(){
+			  window.location.href=/*[[@{'/edit/'+${articleModel.article.id}}]]*/
+	})
+	 })
+	</script>
+</body>
+</html>
